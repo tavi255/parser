@@ -108,13 +108,89 @@ public class Grammar {
         sb.append("productions: \n");
         p.forEach((lhs,rhs)->{
 
-            for(String left:lhs)
+            for(String st:lhs)
+                sb.append(st).append(",");
+            sb.replace(sb.length()-1,sb.length()," -> ");
+            for(List<String>ls:rhs)
             {
+                for(String elem:ls)
+                    sb.append(elem).append(" ");
+                sb.append("|");
+            }
+
+            sb.replace(sb.length()-1,sb.length(),"");
+            sb.append("\n");
+
+        });
+
+
+        System.out.println(sb.toString());
+
+    }
+
+    public void print_productions_forNonTerminal(String nt)
+    {
+        StringBuilder sb=new StringBuilder();
+
+        sb.append("productions for: ").append(nt).append("\n");
+
+        for(Set<String>lhs:p.keySet())
+            if(lhs.contains(nt))
+            {
+                sb.append(nt).append(" -> ");
+                Set<List<String>>rhs=p.get(lhs);
+
+                for(List<String>ls:rhs)
+                {
+                    for(String st:ls)
+                    {
+                        sb.append(st).append(" ");
+                    }
+                    sb.append("|");
+                }
+
+                sb.replace(sb.length()-1,sb.length(),"");
+
 
             }
 
-        });
         System.out.println(sb.toString());
+
+    }
+
+
+    public boolean checkIFCFG()
+    {
+
+        boolean startSym=false;
+        for(Set<String>lhs:p.keySet())
+            if(lhs.contains(S))
+                startSym=true;
+
+        if(!startSym)
+            return false;
+
+        for(Set<String>lhs:p.keySet())
+        {
+            if(lhs.size()>1)
+                return false;
+
+            else if(!N.contains(lhs.iterator().next()))
+                return false;
+
+            Set<List<String>>rhs=p.get(lhs);
+
+            for(List<String>ls:rhs)
+            {
+                for(String st:ls)
+                    if(!N.contains(st) && !E.contains(st))
+                        return false;
+            }
+
+        }
+
+        return true;
+
 
     }
 
