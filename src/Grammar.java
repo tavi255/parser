@@ -7,7 +7,7 @@ public class Grammar {
 
     private Set<String>N=new HashSet<>();
     private Set<String>E=new HashSet<>();
-    private final HashMap<Set<String>,Set<List<String>>>p=new HashMap<>();
+    private final HashMap<List<String>,Set<List<String>>>p=new HashMap<>();
     private String S;
 
     public Grammar(String filename)
@@ -34,13 +34,17 @@ public class Grammar {
             while(line!=null)
             {
                 String[] tokens=line.split("->");
-                String [] lhsTokens=tokens[0].split(",");
+                String [] lhsTokens=tokens[0].split(" ");
                 String [] rhsTokens=tokens[1].split("\\|");
 
-                Set<String>lhs=new HashSet<>();
+                List<String>lhs=new ArrayList<>();
 
                 for(String l:lhsTokens)
-                    lhs.add(l.strip());
+                {
+                    if(!lhs.contains(l.strip()))
+                        lhs.add(l.strip());
+                }
+
 
                 if(!p.containsKey(lhs))
                     p.put(lhs,new HashSet<>());
@@ -109,7 +113,7 @@ public class Grammar {
         p.forEach((lhs,rhs)->{
 
             for(String st:lhs)
-                sb.append(st).append(",");
+                sb.append(st).append(" ");
             sb.replace(sb.length()-1,sb.length()," -> ");
             for(List<String>ls:rhs)
             {
@@ -131,12 +135,12 @@ public class Grammar {
     public void print_productions_forNonTerminal(String nt)
     {
         StringBuilder sb=new StringBuilder();
+        String [] arr=nt.split(" ");
 
-        sb.append("productions for: ").append(nt).append("\n");
-
-        for(Set<String>lhs:p.keySet())
-            if(lhs.contains(nt))
-            {
+        if(arr.length==1)
+        {
+            for(List<String>lhs:p.keySet())
+                if(lhs.contains(nt) && lhs.size()==1) {
                 sb.append(nt).append(" -> ");
                 Set<List<String>>rhs=p.get(lhs);
 
@@ -153,6 +157,66 @@ public class Grammar {
 
 
             }
+        }
+
+        boolean ok=false;
+        int line=0;
+        int ln=-1;
+
+        sb.append("productions for: ").append(nt).append("\n");
+
+        for(List<String>lhs:p.keySet())
+        {
+            if(lhs.size()==arr.length)
+            {
+                int nr=0;
+                for(int i=0;i<lhs.size();i++)
+                    if(lhs.get(i).equals(arr[i]))
+                        nr++;
+
+                if(nr==lhs.size())
+                {
+                    ok=true;
+                    ln=line;
+                }
+
+            }
+            line++;
+        }
+
+
+        if(ok)
+        {
+            line=0;
+            for(List<String>lhs:p.keySet())
+            {
+                if(line==ln)
+                {
+                    for(String l:lhs)
+                        sb.append(l).append(" ");
+
+                    sb.append(" -> ");
+                    Set<List<String>>rhs=p.get(lhs);
+
+                    for(List<String>ls:rhs)
+                    {
+                        for(String st:ls)
+                        {
+                            sb.append(st).append(" ");
+                        }
+                        sb.append("|");
+                    }
+
+                    sb.replace(sb.length()-1,sb.length(),"");
+                }
+                line++;
+            }
+
+
+
+
+
+        }
 
         System.out.println(sb.toString());
 
@@ -163,14 +227,14 @@ public class Grammar {
     {
 
         boolean startSym=false;
-        for(Set<String>lhs:p.keySet())
+        for(List<String>lhs:p.keySet())
             if(lhs.contains(S))
                 startSym=true;
 
         if(!startSym)
             return false;
 
-        for(Set<String>lhs:p.keySet())
+        for(List<String>lhs:p.keySet())
         {
             if(lhs.size()>1)
                 return false;
