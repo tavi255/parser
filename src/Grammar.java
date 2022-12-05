@@ -259,6 +259,23 @@ public class Grammar {
     }
 
 
+    public Map<List<String>,List<String>> filter(String nonT)
+    {
+        Map<List<String>,List<String>>f=new HashMap<>();
+
+        for(List<String>k : p.keySet())
+        {
+            if(k.contains(nonT))
+            {
+                List<String> value = p.get(k).iterator().next();
+                f.put(k,value);
+            }
+        }
+
+        return f;
+
+    }
+
 
 
 }

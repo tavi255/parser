@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args)
     {
-        Grammar g =new Grammar("D:\\lftc lab\\parserr\\parser\\g2.txt");
+        Grammar g =new Grammar("D:\\lftc lab\\parserr\\parser\\g1.txt");
 
         g.print_non_Nterminals();
         g.print_terminals();
