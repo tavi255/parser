@@ -1,7 +1,6 @@
-listDecl size nzd d epsilon
-int char < > [ ] list 0 1 2 3 4 5 6 7 8 9
+listDecl size const
+int char < > [ ] list const
 listDecl
 listDecl -> list < char > [ size ] | list < int > [ size ]
-size -> 0 | nzd d
-nzd -> 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-d -> 0 d | nzd d | epsilon
+size -> const
+
