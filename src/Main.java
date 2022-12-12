@@ -28,7 +28,24 @@ public class Main {
 
         System.out.println(sb);
 
+        Map<List<String>, List<String>> gto=p.goTo(closure,"S");
 
+        StringBuilder sb2=new StringBuilder();
+
+        for(List<String>k: gto.keySet())
+        {
+            String key=k.get(0);
+            sb.append(key).append(" -> ");
+            for(String v: gto.get(k))
+            {
+                sb.append(v).append("|");
+            }
+
+            sb.replace(sb.length()-1,sb.length(),"\n");
+
+        }
+
+        System.out.println(sb);
 
 
 

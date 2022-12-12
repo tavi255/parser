@@ -106,7 +106,7 @@ public class Parser {
                    }
                    else
                    {
-                       new_symbol=value.get(i).substring(space+1)+".";
+                       new_symbol=value.get(i).substring(1)+".";
                    }
                }
                else
@@ -127,7 +127,7 @@ public class Parser {
                List<String>y=new LinkedList<>();
                y.add(new_symbol);
                value.set(i,new_symbol);
-               Map<List<String>,List<String>>closure=closure(key + " -> " +String.join("|",value));
+               Map<List<String>,List<String>>closure=closure(key.get(0) + " -> " +String.join("|",value));
                nestedMap.putAll(closure);
 
            }
