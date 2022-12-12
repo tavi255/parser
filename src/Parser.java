@@ -81,56 +81,78 @@ public class Parser {
            List<String>value=new ArrayList<>((List<String>)elem.getValue());
            List<String>key=(List<String>) elem.getKey();
 
-           int index=-1;
+           int ind2=-1;
            int i=0;
+
+           List<Integer>ind=new ArrayList<>();
+           List<Integer>ii=new ArrayList<>();
 
            for(var x:value)
            {
-               index=x.indexOf("."+symbol);
-               if(index!=-1)
-                   break;
+
+               ind2=x.indexOf("."+symbol);
+
+               if(ind2!=-1)
+               {
+                   ind.add(ind2);
+                   ii.add(i);
+               }
+
+
                i++;
            }
 
-           if(index!=-1)
+           int indice=0;
+
+
+           for(Integer index:ind)
            {
-               String new_symbol="";
-               int space=value.get(i).indexOf(" ",index); //primul spatiu de dupa punct
-
-               if(index==0)
+               if(index!=-1)
                {
-                   if(space!=-1)
-                   {
-                       new_symbol=value.get(i).substring(1,space) + " ." + value.get(i).substring(space+1);
+                   i=ii.get(indice);
 
+                   String new_symbol="";
+                   int space=value.get(i).indexOf(" ",index); //primul spatiu de dupa punct
+
+                   if(index==0)
+                   {
+                       if(space!=-1)
+                       {
+                           new_symbol=value.get(i).substring(1,space) + " ." + value.get(i).substring(space+1);
+
+                       }
+                       else
+                       {
+                           new_symbol=value.get(i).substring(1)+".";
+                       }
                    }
                    else
                    {
-                       new_symbol=value.get(i).substring(1)+".";
+                       if(space!=-1)
+                       {
+                           new_symbol=value.get(i).substring(0,index)
+                                   + value.get(i).substring(index+1,space+1) +"."
+                                   + value.get(i).substring(space+1);
+                       }
+                       else
+                       {
+                           new_symbol=value.get(i).substring(0,index)
+                                   + value.get(i).substring(index+1)+".";
+                       }
                    }
-               }
-               else
-               {
-                   if(space!=-1)
-                   {
-                       new_symbol=value.get(i).substring(0,index)
-                               + value.get(i).substring(index+1,space+1) +"."
-                               + value.get(i).substring(space+1);
-                   }
-                   else
-                   {
-                       new_symbol=value.get(i).substring(0,index)
-                               + value.get(i).substring(index+1)+".";
-                   }
+
+                   List<String> y = new LinkedList<>();
+                   y.add(new_symbol);
+                   value.set(i, new_symbol);
+                   Map<List<String>,List<String>>closure=closure(key.get(0) + " -> " +String.join("|",value));
+                   nestedMap.putAll(closure);
+
                }
 
-               List<String>y=new LinkedList<>();
-               y.add(new_symbol);
-               value.set(i,new_symbol);
-               Map<List<String>,List<String>>closure=closure(key.get(0) + " -> " +String.join("|",value));
-               nestedMap.putAll(closure);
-
+               indice++;
            }
+
+
 
        }
 
