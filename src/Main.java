@@ -1,19 +1,36 @@
+import java.util.List;
+import java.util.Map;
+
 public class Main {
 
     public static void main(String[] args)
     {
         Grammar g =new Grammar("D:\\lftc lab\\parserr\\parser\\g1.txt");
 
-        g.print_non_Nterminals();
-        g.print_terminals();
-        g.printStartSymbol();
-        g.print_productions();
-        g.print_productions_forNonTerminal("A S");
+        Parser p=new Parser(g);
 
-        if(g.checkIFCFG())
-            System.out.println("Context free grammar!");
-        else
-            System.out.println("Not a context free grammar!");
+        Map<List<String>, List<String>> closure=p.closure("S' -> .S");
+
+        StringBuilder sb=new StringBuilder();
+
+        for(List<String>k: closure.keySet())
+        {
+            String key=k.get(0);
+            sb.append(key).append(" -> ");
+            for(String v: closure.get(k))
+            {
+                sb.append(v).append("|");
+            }
+
+            sb.replace(sb.length()-1,sb.length(),"\n");
+
+        }
+
+        System.out.println(sb);
+
+
+
+
 
     }
 

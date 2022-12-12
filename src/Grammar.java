@@ -15,6 +15,14 @@ public class Grammar {
         readFromFile(filename);
     }
 
+    public Set<String> getN() {
+        return N;
+    }
+
+    public Set<String> getE() {
+        return E;
+    }
+
     private void readFromFile(String filename)
     {
         try
@@ -267,7 +275,16 @@ public class Grammar {
         {
             if(k.contains(nonT))
             {
-                List<String> value = p.get(k).iterator().next();
+               List<String>value=new ArrayList<>();
+                for(List<String>rhsList:p.get(k))
+                {
+                    StringBuilder sb=new StringBuilder();
+                    for(String elem:rhsList)
+                        sb.append(elem+" ");
+                    sb.replace(sb.length()-1,sb.length(),"");
+                    value.add(sb.toString());
+
+                }
                 f.put(k,value);
             }
         }
