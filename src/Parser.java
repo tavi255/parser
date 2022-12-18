@@ -80,6 +80,7 @@ public class Parser {
        {
            List<String>value=new ArrayList<>((List<String>)elem.getValue());
            List<String>key=(List<String>) elem.getKey();
+           List<String>values=new ArrayList<>();
 
            int ind2=-1;
            int i=0;
@@ -92,8 +93,12 @@ public class Parser {
 
                ind2=x.indexOf("."+symbol);
 
+
+
                if(ind2!=-1)
                {
+                   if(!x.substring(ind2+1).split(" ")[0].equals(symbol))
+                       continue;
                    ind.add(ind2);
                    ii.add(i);
                }
@@ -141,17 +146,20 @@ public class Parser {
                        }
                    }
 
-                   List<String> y = new LinkedList<>();
-                   y.add(new_symbol);
-                   value.set(i, new_symbol);
-                   Map<List<String>,List<String>>closure=closure(key.get(0) + " -> " +String.join("|",value));
-                   nestedMap.putAll(closure);
+
+                   values.add(new_symbol);
+
 
                }
 
                indice++;
            }
 
+           if(!values.isEmpty())
+           {
+               Map<List<String>,List<String>>closure=closure(key.get(0) + " -> " +String.join("|",values));
+               nestedMap.putAll(closure);
+           }
 
 
        }
